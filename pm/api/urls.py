@@ -11,6 +11,6 @@ urlpatterns = [
 
     # Json paster
     path('json/', ViewRequest.as_view(), name='ViewRequest'),
-    path('data/tickers', ListTickers.as_view(), name='ViewRequest'),
-    path('data/<ticker>', ListHistory.as_view(), name='ListHistory')
+    path('data/tickers/', ListTickers.as_view(), name='ViewRequest'),
+    path('data/<ticker>/', ListHistory.as_view(), name='ListHistory')
     ]
