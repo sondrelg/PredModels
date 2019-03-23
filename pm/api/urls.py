@@ -1,6 +1,6 @@
 from api.views.json import ViewRequest
 from api.views.tickers import ListTickers
-from api.views.history import ListHistory
+from api.views.stock_data import ListHistory
 
 
 from django.urls import path, include
