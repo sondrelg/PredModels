@@ -2,23 +2,23 @@
 
 In progress
 
-todo:
+# todo:
 
-For frontend
+#### For frontend
 - Create econ models in python (api/services/*)
-- Create API endpoints to serve content
+- ~~Create API endpoints to serve content~~
 - Set up JS queries in frontend to get content
 - Finish frontend
 
-For backend
-- Create DB models
+#### For backend
+- ~~Create DB models~~
 - Set up celery workers
 - 
 
-For deployment:
+#### For deployment:
 - Set up CI/CD for github pages
 - Setup CI/CD for AWS
 
-TBD:
+####  TBD:
 - API Authentication
 - Tests (CI/CD)
