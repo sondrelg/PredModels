@@ -14,7 +14,6 @@ import os
 from decouple import config, Csv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 SECRET_KEY = config('secret_key')                           # String
 DEBUG = config('debug', default=False, cast=bool)           # Boolean
 ALLOWED_HOSTS = config('allowed_hosts', cast=Csv())         # List
@@ -28,6 +27,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -46,7 +48,7 @@ ROOT_URLCONF = 'pm.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'static/templates/')],
+        'DIRS': [os.path.join(BASE_DIR, 'static/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
