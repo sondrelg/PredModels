@@ -48,4 +48,3 @@ def get_stock_tickers() -> list:
     tickers = [row.findAll('td')[1].text for row in table.findAll('tr')[1:] if row.findAll('td')[1].text[:3] != "OBX"]
     return tickers
 
-
