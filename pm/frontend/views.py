@@ -6,3 +6,6 @@ def index(request):
 
 def models(request):
     return render(request, 'models.html')
+
+def treemap(request):
+    return render(request, 'treemap.html')
