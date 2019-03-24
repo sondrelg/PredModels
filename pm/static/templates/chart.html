@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript">
+window.onload = function() {
+
+var options = {
+	animationEnabled: true,
+	theme: "light2", // "light1", "light2", "dark1", "dark2"
+	exportEnabled: true,
+	title:{
+		text: "Stock Price: AT&T Vs Verizon for 2016"
+	},
+	axisX: {
+		valueFormatString: "MMM"
+	},
+	axisY: {
+		includeZero:false,
+		prefix: "$",
+		title: "Price (in USD)"
+	},
+	data: [{
+		type: "candlestick",
+		yValueFormatString: "$###0.00",
+		xValueFormatString: "MMM",
+		dataPoints: getStockData()
+            /*[
+			{ x: new Date(2016, 00, 01), y: [34.080002, 36.060001, 33.410000, 36.060001] },
+			{ x: new Date(2016, 01, 01), y: [36.040001, 37.500000, 35.790001, 36.950001] },
+			{ x: new Date(2016, 02, 01), y: [37.099998, 39.720001, 37.060001, 39.169998] },
+			{ x: new Date(2016, 03, 01), y: [38.669998, 39.360001, 37.730000, 38.820000] },
+			{ x: new Date(2016, 04, 01), y: [38.869999, 39.669998, 37.770000, 39.150002] },
+			{ x: new Date(2016, 05, 01), y: [39.099998, 43.419998, 38.580002, 43.209999] },
+			{ x: new Date(2016, 06, 01), y: [43.209999, 43.889999, 41.700001, 43.290001] },
+			{ x: new Date(2016, 07, 01), y: [43.250000, 43.500000, 40.549999, 40.880001] },
+			{ x: new Date(2016, 08, 01), y: [40.849998, 41.700001, 39.549999, 40.610001] },
+			{ x: new Date(2016, 09, 01), y: [40.619999, 41.040001, 36.270000, 36.790001] },
+			{ x: new Date(2016, 10, 01), y: [36.970001, 39.669998, 36.099998, 38.630001] },
+			{ x: new Date(2016, 11, 01), y: [38.630001, 42.840000, 38.160000, 40.380001] }
+		]
+		*/
+	}]
+};
+$("#chartContainer").CanvasJSChart(options);
+
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+<script>
+
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+    function parseData(data) {
+        var open  = JSON.parse(data.NANO.open)
+        var high  = JSON.parse(data.NANO.high)
+        var low   = JSON.parse(data.NANO.low)
+        var close = JSON.parse(data.NANO.close)
+        var value = JSON.parse(data.NANO.value)
+        var volume = JSON.parse(data.NANO.volume)
+        var date  = JSON.parse(data.NANO.date)
+        return_data = []
+        for (i=0; i<12;i++) {
+            //TODO: Change above to i<date.length
+            year = parseInt(date[i].toString().substring(0, 4));
+            month = parseInt(date[i].toString().substring(4, 6));
+            day = parseInt(date[i].toString().substring(6, 8));
+            date_open = parseFloat(open[i]);
+            date_high = parseFloat(high[i]);
+            date_low = parseFloat(low[i]);
+            date_close = parseFloat(close[i]);
+            return_data.push(
+                { x: new Date(year, day, month), y: [date_open, date_high, date_low, date_close] }
+            )
+        }
+        return return_data
+    }
+
+    function getStockData() {
+        var csrftoken = getCookie('csrftoken');
+
+        fetch('http://127.0.0.1:8080/api/data/nano/',
+            {
+                method: 'GET',
+                headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken': csrftoken
+                }})
+            .then(res=>res.json())
+            .then(function(data) {
+                parsed_data = parseData(data)
+                console.log(parsed_data[0])
+                return parsed_data
+            });
+
+
+
+        demo_data =[
+			{ x: new Date(2016, 00, 01), y: [34.080002, 36.060001, 33.410000, 36.060001] },
+			{ x: new Date(2016, 01, 01), y: [36.040001, 37.500000, 35.790001, 36.950001] },
+			{ x: new Date(2016, 02, 01), y: [37.099998, 39.720001, 37.060001, 39.169998] },
+			{ x: new Date(2016, 03, 01), y: [38.669998, 39.360001, 37.730000, 38.820000] },
+			{ x: new Date(2016, 04, 01), y: [38.869999, 39.669998, 37.770000, 39.150002] },
+			{ x: new Date(2016, 05, 01), y: [39.099998, 43.419998, 38.580002, 43.209999] },
+			{ x: new Date(2016, 06, 01), y: [43.209999, 43.889999, 41.700001, 43.290001] },
+			{ x: new Date(2016, 07, 01), y: [43.250000, 43.500000, 40.549999, 40.880001] },
+			{ x: new Date(2016, 08, 01), y: [40.849998, 41.700001, 39.549999, 40.610001] },
+			{ x: new Date(2016, 09, 01), y: [40.619999, 41.040001, 36.270000, 36.790001] },
+			{ x: new Date(2016, 10, 01), y: [36.970001, 39.669998, 36.099998, 38.630001] },
+			{ x: new Date(2016, 11, 01), y: [38.630001, 42.840000, 38.160000, 40.380001] }
+		]
+        console.log(demo_data[0])
+        return demo_data
+
+    }
+
+
+</script>
+</body>
+</html>

@@ -9,3 +9,6 @@ def models(request):
 
 def treemap(request):
     return render(request, 'treemap.html')
+
+def chart(request):
+    return render(request, 'chart.html')
