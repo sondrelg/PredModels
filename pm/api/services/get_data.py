@@ -4,7 +4,25 @@ import pandas as pd
 import requests
 import asyncio
 from aioify import aioify
+import tsv
 
+def get_stock_history_tsv(ticker: str) -> dict:
+    """
+    Only takes tickers from OSE
+    """
+    # url = "https://cdn.rawgit.com/rrag/react-stockcharts/master/docs/data/MSFT.tsv"
+    # df = pd.read_csv(response,sep="\t", index_col='date')
+
+    url = f"https://www.netfonds.no/quotes/paperhistory.php?paper={ticker}.OSE&csv_format=csv"
+    response = urllib.request.urlopen(url)
+    df = pd.read_csv(response, encoding="ISO-8859-1", delimiter=",")
+    df = df[['quote_date','open','high','low','close','volume']]
+    df.columns = ['date','open','high','low','close','volume']
+    df['date'] = pd.to_datetime(df['date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
+    jsn = [{"date":df.iloc[i]['date'], 'open':df.iloc[i]['open'], 'high':df.iloc[i]['high'],'low':df.iloc[i]['low'],
+            'close':df.iloc[i]['close'],'volume':df.iloc[i]['volume']} for i in range(len(df.date))]
+    jsn = jsn[::-1]
+    return jsn
 
 def get_stock_history(ticker: str) -> dict:
     """

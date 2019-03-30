@@ -1,9 +1,7 @@
 
 import React from 'react';
-import { render } from 'react-dom';
 import Chart from './Chart';
 import { getData } from "./utils"
-
 import { TypeChooser } from "react-stockcharts/lib/helper";
 
 export class ChartComponent extends React.Component {
@@ -17,9 +15,7 @@ export class ChartComponent extends React.Component {
 			return <div>Loading...</div>
 		}
 		return (
-			<TypeChooser>
-				{type => <Chart type={type} data={this.state.data} />}
-			</TypeChooser>
+			<Chart type="svg" data={this.state.data}/>
 		)
 	}
 }

@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import ReactDOM from 'react-dom';
 
 import Header from './layout/Header'
-import ChartComponent from './models/Candlestick'
+import ChartComponent from './models/candlestick_chart/candlestick'
 
 class App extends Component {
     render() {
@@ -11,10 +11,8 @@ class App extends Component {
                 <Header/>
                 <div className="container">
                     <ChartComponent/>
-
+                    <p><i>Press "d" for å tegne, del for å slette, esc for å kunne manuvrere</i></p>
                 </div>
-
-
             </Fragment>
         )
     }
