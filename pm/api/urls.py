@@ -1,13 +1,13 @@
 from api.views.json import ViewRequest
 from api.views.tickers import ListTickers
 from api.views.stock_data import ListHistory
-
+from api.views import api_docs
 
 from django.urls import path, include
 
 urlpatterns = [
     # Index
-#    path('', include('docs.urls')),
+    path('', api_docs.api_docs, name='api_docs'),
 
     # Json paster
     path('json/', ViewRequest.as_view(), name='ViewRequest'),
