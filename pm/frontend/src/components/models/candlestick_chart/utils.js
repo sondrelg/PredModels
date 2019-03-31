@@ -1,7 +1,13 @@
 // Source: https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickStockScaleChartWithVolumeBarV3
 
 export function getData() {
-	const promise = fetch("api/data/tsv/nano")
+	const url_string = window.location.href
+	var url = new URL(url_string);
+	var ticker = url.searchParams.get("name");
+	if (ticker==null){
+		ticker="NHY"
+	}
+	const promise = fetch("api/data/tsv/"+ticker)
 		.then(response => response.json())
 		.then(data => {
 
