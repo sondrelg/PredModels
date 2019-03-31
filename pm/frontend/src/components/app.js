@@ -10,7 +10,7 @@ class App extends Component {
         return (
             <Fragment>
                 <Header/>
-                <div className="container">
+                <div className="container body">
                     <CandleStickChart/>
                 </div>
             </Fragment>
