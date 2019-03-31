@@ -134,13 +134,20 @@ class CandleStickChartWithEquidistantChannel extends React.Component {
 		const start = xAccessor(last(data));
 		const end = xAccessor(data[Math.max(0, data.length - 150)]);
 		const xExtents = [start, end];
-
+		const url_string = window.location.href
+		var url = new URL(url_string);
+		var ticker = url.searchParams.get("name");
+		if (ticker==null){
+			ticker="Nano"
+		}
+		const margin = { left: 70, right: 70, top: 20, bottom: 30 };
 		return (
+
 			<ChartCanvas ref={this.saveCanvasNode}
 				height={600}
 				width={width}
 				ratio={ratio}
-				margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
+				margin={margin}
 				type={type}
 				seriesName="MSFT"
 				data={data}
@@ -149,6 +156,8 @@ class CandleStickChartWithEquidistantChannel extends React.Component {
 				displayXAccessor={displayXAccessor}
 				xExtents={xExtents}
 			>
+				<Label x={(width - margin.left - margin.right) / 2} y={30}
+					fontSize="20" text={ticker.toUpperCase()} />
 				<Chart id={1} height={400} yExtents={[d => [d.high, d.low]]} padding={{ top: 10, bottom: 20 }}>
 					<XAxis axisAt="bottom" orient="bottom" showTicks={false} outerTickSize={0} />
 					<YAxis axisAt="right" orient="right" ticks={5} />
