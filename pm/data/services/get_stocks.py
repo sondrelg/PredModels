@@ -22,12 +22,19 @@ def get_name_and_value(ticker):
 
     try:
         name = soup(text=re.compile(r'^Navn$'))[0].parent.parent.find('td').text
+        if name == '':
+            name = soup(text=re.compile(r'^Navn$'))[0].parent.parent.parent.find('th').text
+            name = name.replace(f'Informasjon om ({ticker.upper()}) ','')
     except Exception as e:
         print(f'Failed getting name for {ticker}')
         name = None
 
     try:
-        shares_outstanding = int(soup(text=re.compile(r'^Antall aksjer$'))[0].parent.parent.find('td').text.replace(' ', ''))
+        shares_outstanding = soup(text=re.compile(r'^Antall aksjer$'))[0].parent.parent.find('td').text.replace(' ', '')
+        if shares_outstanding != '' and shares_outstanding != '\xa0':
+            shares_outstanding = int(shares_outstanding)
+        else:
+            shares_outstanding = None
     except Exception as e:
         print(f'Failed getting value for {ticker}')
         shares_outstanding = None

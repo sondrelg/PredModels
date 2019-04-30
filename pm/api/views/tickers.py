@@ -2,7 +2,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from api.models import Tickers
+from data.models import Stocks
 
 class ListTickers(APIView):
     """
@@ -10,7 +10,7 @@ class ListTickers(APIView):
     """
     def get(self, request: Request):
         try:
-            tickers = Tickers.objects.values_list()
+            tickers = Stocks.objects.values_list()
         except Exception as e:
             print(e)
             return Response({'error': 'Failed querying database'}, status=500)

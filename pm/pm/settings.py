@@ -12,11 +12,15 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 from decouple import config, Csv
+from celery.schedules import crontab
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('secret_key')                           # String
 DEBUG = config('debug', default=False, cast=bool)           # Boolean
 ALLOWED_HOSTS = config('allowed_hosts', cast=Csv())         # List
+ENVIRONMENT = config('environment')
+#FORKED_BY_MULTIPROCESSING = config('forked', cast=int)
 
 
 INSTALLED_APPS = [
@@ -102,13 +106,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -124,4 +124,21 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework_csv.renderers.CSVRenderer',
     ),
+}
+
+# Celery Settings
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+
+
+CELERY_BEAT_SCHEDULE = {
+    'get_data': {
+        'task': 'data.tasks.get_and_save_stock_data',
+        'schedule': crontab(minute='*/1')
+    }
 }
