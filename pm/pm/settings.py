@@ -137,8 +137,12 @@ CELERY_TIMEZONE = TIME_ZONE
 
 
 CELERY_BEAT_SCHEDULE = {
-    'get_data': {
+    'get_stocks': {
         'task': 'data.tasks.get_and_save_stock_data',
-        'schedule': crontab(minute='*/1')
+        'schedule': crontab(minute='*/3')
+    },
+    'get_current_data': {
+        'task': 'data.tasks.get_and_save_current_data',
+        'schedule': crontab(minute='*/2')
     }
 }

@@ -1,10 +1,10 @@
 from bs4 import BeautifulSoup as bs
 from aioify import aioify
-import urllib.request
-import pandas as pd
 import requests
 import asyncio
 import re
+
+from data.models import Stocks
 
 
 def get_stock_tickers() -> list:
@@ -24,7 +24,7 @@ def get_name_and_value(ticker):
         name = soup(text=re.compile(r'^Navn$'))[0].parent.parent.find('td').text
         if name == '':
             name = soup(text=re.compile(r'^Navn$'))[0].parent.parent.parent.find('th').text
-            name = name.replace(f'Informasjon om ({ticker.upper()}) ','')
+            name = name.replace(f'Informasjon om ({ticker.upper()}) ', '')
     except Exception as e:
         print(f'Failed getting name for {ticker}')
         name = None
@@ -39,11 +39,10 @@ def get_name_and_value(ticker):
         print(f'Failed getting value for {ticker}')
         shares_outstanding = None
 
-    return {
-            'ticker': ticker,
+    return {'ticker': ticker,
             'name': name,
-            'shares_outstanding': shares_outstanding
-            }
+            'shares_outstanding': shares_outstanding}
+
 
 def get_data():
     tasks, data, tickers = [], {}, get_stock_tickers()
@@ -56,5 +55,24 @@ def get_data():
 
     responses = asyncio.gather(*tasks)
     data = loop.run_until_complete(responses)
-
     return data
+
+
+def save_stocks(data):
+    for datum in data:
+        try:
+            stock = Stocks.objects.get(ticker=datum['ticker'])
+            if stock.name != datum['name']:
+                stock.name = datum['name']
+            if stock.shares_outstanding != datum['shares_outstanding']:
+                stock.shares_outstanding = datum['shares_outstanding']
+            stock.save()
+            print(f"Updated {datum['ticker']}")
+        except:
+            try:
+                Stocks.objects.create(ticker=datum['ticker'],
+                                      name=datum['name'],
+                                      shares_outstanding=datum['shares_outstanding'])
+                print(f"Created {datum['ticker']}")
+            except Exception as e:
+                print(f"Failed saving {datum['ticker']}", e)
