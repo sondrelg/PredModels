@@ -11,7 +11,7 @@ class Stocks(models.Model):
 
 
 class CurrentData(models.Model):
-    stock = models.ForeignKey(Stocks, on_delete=models.CASCADE, blank=False, null=False, primary_key=True)
+    stock = models.OneToOneField(Stocks, on_delete=models.CASCADE, blank=False, null=False, primary_key=True)
     change = models.FloatField(null=True, blank=False)
     percent_change = models.FloatField(null=True, blank=False)
     open = models.FloatField(null=True, blank=False)
@@ -32,10 +32,14 @@ class CurrentData(models.Model):
         return super(CurrentData, self).save(*args, **kwargs)
 
 class HistoricalData(models.Model):
-    GUID = models.UUIDField(primary_key=True, default=uuid4(), editable=False, blank=True)
-    date = models.DateField()
     stock = models.ForeignKey(Stocks, on_delete=models.CASCADE, blank=False, null=False, unique=False)
-    open = models.IntegerField(blank=True, null=True)
-    high = models.IntegerField(blank=True, null=True)
-    low = models.IntegerField(blank=True, null=True)
-    close = models.IntegerField(blank=True, null=True)
+    date = models.DateField()
+    open = models.FloatField(blank=True, null=True)
+    high = models.FloatField(blank=True, null=True)
+    low = models.FloatField(blank=True, null=True)
+    close = models.FloatField(blank=True, null=True)
+    value = models.IntegerField(blank=True, null=True)
+    volume = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('stock', 'date')

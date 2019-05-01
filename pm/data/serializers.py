@@ -5,6 +5,3 @@ class StockSerializer(serializers.Serializer):
     name = serializers.CharField()
     shares_outstanding = serializers.IntegerField()
 
-from django.core import serializers
-objectQuerySet = Stocks.objects.ticker()
-data = serializers.serialize('json', objectQuerySet, fields=('fileName','id'))

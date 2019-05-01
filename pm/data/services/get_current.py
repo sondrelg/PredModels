@@ -55,20 +55,16 @@ def get_stock(ticker: str) -> dict:
 
 def get_data() -> dict:
     tickers = [ticker['ticker'] for ticker in Stocks.objects.values('ticker')]
-    tasks, product, loop = [], {}, asyncio.new_event_loop()
+    tasks, loop = [], asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-
     for ticker in tickers:
         task = asyncio.ensure_future(aioify(get_stock)(ticker))
         tasks.append(task)
-
     responses = asyncio.gather(*tasks)
     results = loop.run_until_complete(responses)
-
     consolidated_results = {}
     for item in results:
         consolidated_results.update(item)
-
     return consolidated_results
 
 def save_data(data: dict):
