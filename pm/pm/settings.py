@@ -139,10 +139,14 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULE = {
     'get_stocks': {
         'task': 'data.tasks.get_and_save_stock_data',
-        'schedule': crontab(minute='*/3')
+        'schedule': crontab(minute=[i for i in range(0,60,4)])
     },
     'get_current_data': {
         'task': 'data.tasks.get_and_save_current_data',
-        'schedule': crontab(minute='*/2')
+        'schedule': crontab(minute=[i+2 for i in range(0,60,4)])
+    },
+    'get_historical_data': {
+        'task': 'data.tasks.get_and_save_historical_data',
+        'schedule': crontab(minute='*/5')
     }
 }

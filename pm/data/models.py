@@ -38,7 +38,7 @@ class HistoricalData(models.Model):
     high = models.FloatField(blank=True, null=True)
     low = models.FloatField(blank=True, null=True)
     close = models.FloatField(blank=True, null=True)
-    value = models.IntegerField(blank=True, null=True)
+    value = models.FloatField(blank=True, null=True)
     volume = models.IntegerField(blank=True, null=True)
 
     class Meta:

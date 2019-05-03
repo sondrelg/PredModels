@@ -7,6 +7,7 @@ export class ChartComponent extends React.Component {
 	componentDidMount() {
 		getData().then(data => {
 			this.setState({ data })
+            console.log(data)
 		})
 	}
 

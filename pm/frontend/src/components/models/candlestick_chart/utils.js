@@ -8,7 +8,7 @@ export function getData() {
 	if (ticker==null){
 		ticker="Nano"
 	}
-	const promise = fetch("api/data/tsv/"+ticker)
+	const promise = fetch("api/data/ticker/"+ticker)
 		.then(response => {
 			if (!response.ok) {
 				throw Error(response.statusText);

@@ -1,9 +1,8 @@
 from datetime import datetime
-from aioify import aioify
 import urllib.request
-import asyncio
 import csv
-
+import asyncio
+from aioify import aioify
 
 from ..models import Stocks, HistoricalData
 
@@ -21,11 +20,11 @@ def get_stock_history(ticker: str):
 
         raw_date = row[0]
         loaded_date = datetime.strptime(raw_date, '%Y%m%d')
-        adjusted_date = loaded_date.strftime('%Y-%m-%d')
+
 
         try:
             stock = Stocks.objects.get(ticker=ticker)
-            obj, created = HistoricalData.objects.get_or_create(stock=stock, date=adjusted_date)
+            obj, created = HistoricalData.objects.get_or_create(stock=stock, date=loaded_date)
 
             # TODO: Remove when everythign is added
             if not created:
@@ -41,7 +40,13 @@ def get_stock_history(ticker: str):
         except Exception as e:
             print(f'Failed saving {ticker}: {e}')
 
-def get_stock_histories() -> dict:
+def get_stock_histories():
     tickers = [ticker['ticker'] for ticker in Stocks.objects.values('ticker')]
+
+    tasks, loop = [], asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     for ticker in tickers:
-        get_stock_history(ticker)
+        task = asyncio.ensure_future(aioify(get_stock_history)(ticker))
+        tasks.append(task)
+    responses = asyncio.gather(*tasks)
+    loop.run_until_complete(responses)

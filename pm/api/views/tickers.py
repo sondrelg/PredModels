@@ -10,7 +10,7 @@ class ListTickers(APIView):
     """
     def get(self, request: Request):
         try:
-            tickers = Stocks.objects.values_list()
+            tickers = [i[0] for i in Stocks.objects.values_list('ticker')]
         except Exception as e:
             print(e)
             return Response({'error': 'Failed querying database'}, status=500)
